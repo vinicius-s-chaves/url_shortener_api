@@ -54,3 +54,15 @@ export const updateShortUrl = async (req, res, next) => {
         next(error)
     }
 }
+
+export const deleteShortUrl = async (req, res, next) => {
+    const { shortCode } = req.params
+    try {
+        const existingUrl = await prisma.shortenUrl.findUnique({ where: { shortCode } })
+        if(!existingUrl) throw new CustomError(404, "URL Not Found")
+        await prisma.shortenUrl.delete({ where: { shortCode } })
+        res.sendStatus(204)
+    } catch (error) {
+        next(error)
+    }
+}
