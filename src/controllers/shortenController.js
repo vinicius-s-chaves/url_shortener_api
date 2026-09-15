@@ -1,5 +1,6 @@
 import { validationResult } from "express-validator"
 import { prisma } from "../../lib/prisma.js"
+import CustomError from "../utils/CustomError.js"
 
 export const createShortenURL = async (req, res, next) => {
     const errors = validationResult(req)
@@ -16,6 +17,20 @@ export const createShortenURL = async (req, res, next) => {
             }
         })
         res.status(201).json(newUrl)
+    } catch (error) {
+        next(error)
+    }
+}
+
+export const getShortUrl = async (req, res, next) => {
+    const { shortCode } = req.params
+    try {
+        const url = await prisma.shortenUrl.findUnique({
+            where: { shortCode },
+            include: { accessCount: false }
+        })
+        if(!url) throw new CustomError(404, "URL Not Found")
+        res.json(url)
     } catch (error) {
         next(error)
     }
