@@ -25,12 +25,14 @@ export const createShortenURL = async (req, res, next) => {
 export const getShortUrl = async (req, res, next) => {
     const { shortCode } = req.params
     try {
-        const url = await prisma.shortenUrl.findUnique({
+        const url = await prisma.shortenUrl.findUnique({ where: { shortCode } })
+        if(!url) throw new CustomError(404, "URL Not Found")
+        const updatedUrlAccess = await prisma.shortenUrl.update({
             where: { shortCode },
+            data: { accessCount: url.accessCount + 1 },
             include: { accessCount: false }
         })
-        if(!url) throw new CustomError(404, "URL Not Found")
-        res.json(url)
+        res.json(updatedUrlAccess)
     } catch (error) {
         next(error)
     }
@@ -62,6 +64,17 @@ export const deleteShortUrl = async (req, res, next) => {
         if(!existingUrl) throw new CustomError(404, "URL Not Found")
         await prisma.shortenUrl.delete({ where: { shortCode } })
         res.sendStatus(204)
+    } catch (error) {
+        next(error)
+    }
+}
+
+export const getUrlStats = async (req, res, next) => {
+    const { shortCode } = req.params
+    try {
+        const url = await prisma.shortenUrl.findUnique({ where: { shortCode } })
+        if(!url) throw new CustomError(404, "URL Not Found")
+        res.json(url)
     } catch (error) {
         next(error)
     }
