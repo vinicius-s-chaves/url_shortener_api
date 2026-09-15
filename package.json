@@ -1,0 +1,32 @@
+{
+  "name": "url_shortener_api",
+  "version": "1.0.0",
+  "description": "��u\u0000r\u0000l\u0000_\u0000s\u0000h\u0000o\u0000r\u0000t\u0000e\u0000n\u0000e\u0000r\u0000_\u0000a\u0000p\u0000i\u0000\r\u0000 \u0000",
+  "main": "index.js",
+  "scripts": {
+    "dev": "node --watch src/app.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/vinicius-s-chaves/url_shortener_api.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "module",
+  "bugs": {
+    "url": "https://github.com/vinicius-s-chaves/url_shortener_api/issues"
+  },
+  "homepage": "https://github.com/vinicius-s-chaves/url_shortener_api#readme",
+  "devDependencies": {
+    "dotenv": "^17.4.2",
+    "prisma": "^7.10.0"
+  },
+  "dependencies": {
+    "@prisma/adapter-pg": "^7.10.0",
+    "@prisma/client": "^7.10.0",
+    "express": "^5.2.1",
+    "pg": "^8.23.0"
+  }
+}
