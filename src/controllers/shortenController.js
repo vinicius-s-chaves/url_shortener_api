@@ -1,5 +1,5 @@
 import { validationResult } from "express-validator"
-import { prisma } from "../../lib/prisma.js"
+import { prisma } from "../lib/prisma.js"
 import CustomError from "../utils/CustomError.js"
 
 export const createShortenURL = async (req, res, next) => {

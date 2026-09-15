@@ -20,3 +20,5 @@ app.listen(PORT, err => {
     }
     console.log(`Server listening on: http://localhost:${PORT}`)
 })
+
+export default app
