@@ -35,3 +35,22 @@ export const getShortUrl = async (req, res, next) => {
         next(error)
     }
 }
+
+export const updateShortUrl = async (req, res, next) => {
+    const errors = validationResult(req)
+    if(!errors.isEmpty()) return res.status(400).json(errors)
+    const { shortCode } = req.params
+    const { url } = req.body
+    try {
+        const existingUrl = await prisma.shortenUrl.findUnique({ where: { shortCode } })
+        if(!existingUrl) throw new CustomError(404, "URL Not Found")
+        const updatedUrl = await prisma.shortenUrl.update({
+            where: { shortCode },
+            data: { url },
+            include: { accessCount: false }
+        })
+        res.json(updatedUrl)
+    } catch (error) {
+        next(error)
+    }
+}
