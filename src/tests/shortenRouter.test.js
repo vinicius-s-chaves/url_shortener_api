@@ -1,8 +1,8 @@
 import "dotenv/config"
 import { describe, it, expect, beforeAll, beforeEach } from "vitest";
 import request from "supertest"
-import app from "../src/app.js"
-import { prisma } from "../src/lib/prisma.js";
+import app from "../app.js"
+import { prisma } from "../lib/prisma.js";
 
 beforeAll(async () => {
     process.env.NODE_ENV = "test"
