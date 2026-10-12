@@ -13,7 +13,7 @@ export const createShortenURL = async (req, res, next) => {
                 shortCode: Date.now().toString(36)
             }
         })
-        const newAccessCount = await prisma.accessCount.create({
+        await prisma.accessCount.create({
             data: { url: { connect: { id: newUrl.id } } }
         })
         res.status(201).json(newUrl)
@@ -25,14 +25,22 @@ export const createShortenURL = async (req, res, next) => {
 export const getShortUrl = async (req, res, next) => {
     const { shortCode } = req.params
     try {
-        const url = await prisma.shortenUrl.findUnique({ where: { shortCode } })
-        if(!url) throw new CustomError(404, "URL Not Found")
-        const updatedUrlAccess = await prisma.shortenUrl.update({
+        const url = await prisma.shortenUrl.findUnique({
             where: { shortCode },
-            data: { accessCount: url.accessCount + 1 },
-            include: { accessCount: false }
+            include: { count: true }
         })
-        res.json(updatedUrlAccess)
+        if(!url) throw new CustomError(404, "URL Not Found")
+        await prisma.accessCount.update({
+            where: { id: url.count[0].id },
+            data: { count: { increment: 1 } },
+        })
+        res.json({
+            id: url.id,
+            url: url.url,
+            shortCode: url.shortCode,
+            createdAt: url.createdAt,
+            updatedAt: url.updatedAt
+        })
     } catch (error) {
         next(error)
     }

@@ -43,7 +43,7 @@ describe("Shorten Router", () => {
             expect(response.body).toHaveProperty("errors")
         })
     })
-    describe.skip("Get shorten URL", () => {
+    describe("Get shorten URL", () => {
         it("gets url's data", async () => {
             const url = await request(app)
                 .post("/shorten")
@@ -53,7 +53,13 @@ describe("Shorten Router", () => {
                 .get(`/shorten/${url.body.shortCode}`)
 
             expect(response.status).toBe(200)
-            expect(response.body).toBe(url.body)
+            expect(response.body).toEqual(url.body)
+        })
+
+        it("returns 404 if url does not exist", async () => {
+            const response = await request(app).get("/shorten/asdasd")
+
+            expect(response.status).toBe(404)
         })
     })
 })
