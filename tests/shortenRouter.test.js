@@ -62,4 +62,51 @@ describe("Shorten Router", () => {
             expect(response.status).toBe(404)
         })
     })
+
+    describe("Update shorten URL", () => {
+        it("updates an existing url", async () => {
+            const url = await request(app)
+            .post("/shorten")
+            .send({ url: "https://roadmap.sh/projects/url-shortening-service" })
+            
+            const newUrl = "https://open.spotify.com/intl-pt/"
+            const response = await request(app)
+                .put(`/shorten/${url.body.shortCode}`)
+                .send({ url: newUrl })
+
+            expect(response.status).toBe(200)
+            expect(response.body.url).toBe(newUrl)
+        })
+
+        it("returns 404 if url does not exist", async () => {
+            const response = await request(app)
+                .put(`/shorten/asdasd`)
+                .send({ url: "http://url.com" })
+
+            expect(response.status).toBe(404)
+        })
+
+        it("rejects invalid request", async () => {
+            const url = await request(app)
+            .post("/shorten")
+            .send({ url: "https://roadmap.sh/projects/url-shortening-service" })
+            
+            const response = await request(app)
+                .put(`/shorten/${url.body.shortCode}`)
+
+            expect(response.status).toBe(400)
+        })
+
+        it("rejects invalid url", async () => {
+            const url = await request(app)
+            .post("/shorten")
+            .send({ url: "https://roadmap.sh/projects/url-shortening-service" })
+            
+            const response = await request(app)
+                .put(`/shorten/${url.body.shortCode}`)
+                .send({ url: "a" })
+
+            expect(response.status).toBe(400)
+        })
+    })
 })

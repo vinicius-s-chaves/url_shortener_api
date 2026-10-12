@@ -57,7 +57,7 @@ export const updateShortUrl = async (req, res, next) => {
         const updatedUrl = await prisma.shortenUrl.update({
             where: { shortCode },
             data: { url },
-            include: { accessCount: false }
+            include: { count: false }
         })
         res.json(updatedUrl)
     } catch (error) {
