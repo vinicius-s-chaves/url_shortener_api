@@ -109,4 +109,33 @@ describe("Shorten Router", () => {
             expect(response.status).toBe(400)
         })
     })
+
+    describe("Get URL status", () => {
+        it("gets url access count", async () => {
+            const url = await request(app)
+                .post("/shorten")
+                .send({ url: "https://roadmap.sh/projects/url-shortening-service" })
+
+            const response = await request(app)
+                .get(`/shorten/${url.body.shortCode}/stats`)
+
+            expect(response.status).toBe(200)
+            expect(response.body).toHaveProperty("count")
+            expect(response.body.count).toBe(0)
+        })
+
+        it("increments url access count", async () => {
+            const url = await request(app)
+                .post("/shorten")
+                .send({ url: "https://roadmap.sh/projects/url-shortening-service" })
+
+            await request(app).get(`/shorten/${url.body.shortCode}`)
+            const response = await request(app)
+                .get(`/shorten/${url.body.shortCode}/stats`)
+
+            expect(response.status).toBe(200)
+            expect(response.body).toHaveProperty("count")
+            expect(response.body.count).toBe(1)
+        })
+    })
 })
