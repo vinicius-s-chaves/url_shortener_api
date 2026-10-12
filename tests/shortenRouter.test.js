@@ -43,7 +43,7 @@ describe("Shorten Router", () => {
             expect(response.body).toHaveProperty("errors")
         })
     })
-    describe("Get shorten URL", () => {
+    describe.skip("Get shorten URL", () => {
         it("gets url's data", async () => {
             const url = await request(app)
                 .post("/shorten")

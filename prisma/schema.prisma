@@ -8,12 +8,19 @@ datasource db {
 }
 
 model ShortenUrl {
-  id          String   @id @default(uuid())
-  url         String
-  shortCode   String   @unique
-  accessCount Int      @default(0)
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt()
+  id        String        @id @default(uuid())
+  url       String
+  shortCode String        @unique
+  count     AccessCount[]
+  createdAt DateTime      @default(now())
+  updatedAt DateTime      @updatedAt()
 
   @@map("shorten_urls")
+}
+
+model AccessCount {
+  id     String     @id @default(uuid())
+  count  Int        @default(0)
+  url_id String
+  url    ShortenUrl @relation(fields: [url_id], references: [id], onDelete: Cascade)
 }

@@ -11,10 +11,10 @@ export const createShortenURL = async (req, res, next) => {
             data: {
                 url,
                 shortCode: Date.now().toString(36)
-            },
-            include: {
-                accessCount: false
             }
+        })
+        const newAccessCount = await prisma.accessCount.create({
+            data: { url: { connect: { id: newUrl.id } } }
         })
         res.status(201).json(newUrl)
     } catch (error) {
