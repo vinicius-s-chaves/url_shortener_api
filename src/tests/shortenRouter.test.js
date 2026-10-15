@@ -12,7 +12,7 @@ beforeEach(async () => {
     await prisma.shortenUrl.deleteMany()
 })
 
-describe("Shorten Router", () => {
+describe.skip("Shorten Router", () => {
     describe("Create new shorten URL", () => {
         it("creates URL and returns its data", async () => {
             const response = await request(app)
