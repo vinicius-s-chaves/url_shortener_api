@@ -20,3 +20,15 @@ export const validateUser = [
         .trim()
         .notEmpty().withMessage(`You need to confirm password`)
 ]
+
+export const validateLogin = [
+    body("email")
+        .trim()
+        .notEmpty().withMessage(`User's email ${emptyErr}`)
+        .isEmail().withMessage(`User's email must be valid`)
+        .isLength({ min: 1, max: 100 }).withMessage(`User's email must have between 1 and 100 characters`),
+    body("password")
+        .trim()
+        .notEmpty().withMessage(`User's password ${emptyErr}`)
+        .isLength({ min: 8, max: 100 }).withMessage(`User's password must have between 8 and 100 characters`),
+]

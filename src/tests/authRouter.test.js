@@ -86,4 +86,59 @@ describe("Auth Router", () => {
             expect(response.body.errors).toHaveLength(1)
         })
     })
+
+    describe("login", () => {
+        it("returns a token", async () => {
+            await request(app)
+                .post("/auth/signup")
+                .send({
+                    name: "vinicius",
+                    email: "vinicius@email.com",
+                    password: "12345678",
+                    confirmPassword: "12345678"
+                })
+            const response = await request(app)
+                .post("/auth/login")
+                .send({ email: "vinicius@email.com", password: "12345678" })
+            
+            expect(response.status).toBe(200)
+            expect(response.body).toHaveProperty("token")
+        })
+
+        it("rejects nonexistent email", async () => {
+            await request(app)
+                .post("/auth/signup")
+                .send({
+                    name: "vinicius",
+                    email: "vinicius@email.com",
+                    password: "12345678",
+                    confirmPassword: "12345678"
+                })
+            const response = await request(app)
+                .post("/auth/login")
+                .send({ email: "invalid@email.com", password: "12345678" })
+            
+            expect(response.status).toBe(400)
+            expect(response.body).toHaveProperty("message")
+            expect(response.body.message).toBe("Invalid Credentials")
+        })
+
+        it("rejects invalid password", async () => {
+            await request(app)
+                .post("/auth/signup")
+                .send({
+                    name: "vinicius",
+                    email: "vinicius@email.com",
+                    password: "12345678",
+                    confirmPassword: "12345678"
+                })
+            const response = await request(app)
+                .post("/auth/login")
+                .send({ email: "vinicius@email.com", password: "invalidPassword" })
+
+            expect(response.status).toBe(400)
+            expect(response.body).toHaveProperty("message")
+            expect(response.body.message).toBe("Invalid Credentials")
+        })
+    })
 })
